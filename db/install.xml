@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="blocks/eportfolio/db" VERSION="20130103" COMMENT="XMLDB file for Exabis E-Portfolio"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="readerview_evaluations" COMMENT="cron evaluations">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="bookid"/>
+        <FIELD NAME="bookid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="id" NEXT="evalcount"/>
+        <FIELD NAME="evalcount" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="bookid" NEXT="evaltotal"/>
+        <FIELD NAME="evaltotal" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="evalcount" NEXT="evalaverage"/>
+        <FIELD NAME="evalaverage" TYPE="number" LENGTH="6" NOTNULL="true" DEFAULT="0" SEQUENCE="false" DECIMALS="1" PREVIOUS="evaltotal"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="bookid"/>
+        <KEY NAME="bookid" TYPE="foreign-unique" FIELDS="bookid" REFTABLE="reader_books" REFFIELDS="id" COMMENT="bookid key" PREVIOUS="primary"/>
+      </KEYS>
+    </TABLE>
+  </TABLES>
+</XMLDB>
