@@ -34,9 +34,12 @@
     require_login($course->id);
     add_to_log($course->id, 'reader', 'reader block view books', "selectbook.php?id=$id", "$id");
 
+    $script_txt = $CFG->dataroot.'/reader/script.txt';
+    $old_script_txt = $CFG->dirroot.'/blocks/readerview/script.txt';
+
     $book_instancesarr = array();
 
-    if ($genre) {
+    if ($genre) { // form data was submitted
 
         if ($fiction=='fn') {
             $fictionsql = '';
@@ -135,28 +138,26 @@
                     echo "}\n";
                     echo '</script>';
                 }
+
                 if ($coverimages) {
-                    foreach ($allcourses as $allcourse) {
-                        if (is_file("{$CFG->dataroot}/{$allcourse->id}/images/{$book->image}")) {
-                            $bookimages[$bookid] = $CFG->wwwroot.'/mod/reader/images.php/'.$allcourse->id.'/images/'.$book->image;
-                            if (empty($getscript)) {
-                                echo '<div>';
+                    if (is_file("{$CFG->dataroot}/reader/images/{$book->image}")) {
+                        $bookimages[$bookid] = $CFG->wwwroot.'/mod/reader/images.php/reader/images/'.$book->image;
+                        if (empty($getscript)) {
+                            echo '<div>';
 
-                                //if ($book->evalaverage > 0) {
-                                //    echo '<a href="#" onclick="showEval('.$book->id.');return false;">';
-                                //}
+                            //if ($book->evalaverage > 0) {
+                            //    echo '<a href="#" onclick="showEval('.$book->id.');return false;">';
+                            //}
 
-                                echo '<img src="'.$CFG->wwwroot.'/blocks/readerview/img/loading-image.png" border="0" alt="'.$book->name.'" height="150" width="100" id="bookavatar-'.$book->id.'" style="background: none repeat scroll 0 0 ';
-                                // echo $book->evalaverage > 0 ? '#F08080' : '#F2E9E2';
-                                echo '; border: 1px solid #DDDDDD; display:inline; margin: 0 10px 10px 0; padding: 5px;" />';
+                            echo '<img src="'.$CFG->wwwroot.'/blocks/readerview/img/loading-image.png" border="0" alt="'.$book->name.'" height="150" width="100" id="bookavatar-'.$book->id.'" style="background: none repeat scroll 0 0 ';
+                            // echo $book->evalaverage > 0 ? '#F08080' : '#F2E9E2';
+                            echo '; border: 1px solid #DDDDDD; display:inline; margin: 0 10px 10px 0; padding: 5px;" />';
 
-                                //if ($book->evalaverage > 0) {
-                                //    echo '</a>';
-                                //}
+                            //if ($book->evalaverage > 0) {
+                            //    echo '</a>';
+                            //}
 
-                                echo '</div>';
-                            }
-                            break;
+                            echo '</div>';
                         }
                     }
                 }
@@ -253,24 +254,29 @@
         }
 
         $tm = 0;
-        $script = "";
+        $script = '';
         foreach ($bookimages as $bookid => $bookimage) {
             $tm = $tm + 170;
             $script .= 'setTimeout('."'".'$("#bookavatar-'.$bookid.'").attr("src","'.$bookimage.'");'."', $tm);\n";
         }
 
-        if (is_writable('script.txt')) {
-            $fp = @fopen('script.txt', 'w+');
+        $fp = false;
+        if (file_exists($script_txt)) {
+            if (is_writable($script_txt)) {
+                $fp = @fopen($script_txt, 'w+');
+            }
         } else {
-            $fp = false;
+            if (is_writable(dirname($script_txt))) {
+                $fp = @fopen($script_txt, 'w');
+            }
         }
+
         if ($fp) {
             fwrite($fp, $script);
             fclose($fp);
         } else {
-            $a = dirname(__FILE__).'/script.txt';
             $link = $CFG->wwwroot.'/course/view.php?id='.$id;
-            print_error('cannotopenforwrit', 'error', $link, $a);
+            print_error('cannotopenforwrit', 'error', $link, $script_txt);
         }
 
         die;
@@ -295,7 +301,7 @@
     echo '        $("#searchresult").html('."'".'<img width="16" height="16" src="'.$CFG->wwwroot.'/blocks/readerview/img/zoomloader.gif" alt="" />'."'".');'."\n";
     echo '    }'."\n";
     echo '    function showScript () {'."\n";
-    echo '        $.post("'.$CFG->wwwroot.'/blocks/readerview/script.txt", function(data) {'."\n";
+    echo '        $.post("'.$CFG->wwwroot.'/mod/reader/images.php/reader/script.txt", function(data) {'."\n";
     echo '            eval(data);'."\n";
     echo '        });'."\n";
     echo '    }'."\n";
