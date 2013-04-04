@@ -17,27 +17,27 @@
     if (! $course = $DB->get_record('course', array('id' => $id))) {
         error('Course id is not valid');
     }
-    $instance = $DB->get_record('block_instances', array('id' => $instanceid));
 
-    if (empty($instance->configdata)) {
-        $context  = (object)array('uselanguages' => '', 'allowquiztaken' => 'yes');
-    } else {
-        $context  = unserialize(base64_decode($instance->configdata));
-    }
-    $reader   = $DB->get_record('reader', array('course' => $course->id));
-
+    $reader = $DB->get_record('reader', array('course' => $course->id));
     if (empty($reader)) {
         // could display a message here: "No reader activity has been setup in this course"
         $reader = (object)array('id' => 0, 'bookinstances' => 0);
     }
 
-    require_login($course->id);
+    $instance = $DB->get_record('block_instances', array('id' => $instanceid));
+    if (empty($instance->configdata)) {
+        $context  = (object)array('uselanguages' => '', 'allowquiztaken' => 'yes');
+    } else {
+        $context  = unserialize(base64_decode($instance->configdata));
+    }
 
+    require_login($course->id);
     add_to_log($course->id, 'reader', 'reader block view books', "selectbook.php?id=$id", "$id");
 
     $book_instancesarr = array();
 
     if ($genre) {
+
         if ($fiction=='fn') {
             $fictionsql = '';
         } else {
@@ -73,9 +73,6 @@
             $genresql = "(rb.genre='{$genre}' OR rb.genre LIKE '{$genre},%' OR rb.genre LIKE '%,{$genre},%' OR rb.genre LIKE '%,{$genre}')";
         }
 
-        if (empty($getscript)) {
-            echo '<table><tr>';
-        }
         if ($order == "rb.name" || $order == "rb.difficulty") {
             $sort = 'ASC';
         } else {
@@ -107,12 +104,21 @@
             }
         }
 
+        $table = new html_table();
+        $table->head  = array('Title', 'Publisher', 'Genre', 'Level', 'Words', 'Evaluation');
+        $table->align = array('left', 'left', 'left', 'center', 'center', 'center');
+        $table->width = '95%';
+
+        if (empty($getscript)) {
+            echo '<table><tr>';
+        }
+
         if (! empty($books)) {
             $bookimages = array();
             foreach ($books as $bookid => $book) {
                 $allcount++;
                 if ($allcount >= $alllimit) {
-                    if ($coverimages == 1 && empty($getscript)) {
+                    if ($coverimages==1 && empty($getscript)) {
                         echo "</tr><tr>";
                     }
                     $allcount = 0;
@@ -220,12 +226,14 @@
                         $evaltext = '';
                     }
 
-                    $table->data[] = array($book->name,
-                                           $book->publisher,
-                                           $generetext,
-                                           $book->difficulty,
-                                           $book->words,
-                                           $evaltext);
+                    $row = new html_table_row();
+                    $row->cells[] = new html_table_cell($book->name);
+                    $row->cells[] = new html_table_cell($book->publisher);
+                    $row->cells[] = new html_table_cell($generetext);
+                    $row->cells[] = new html_table_cell($book->difficulty);
+                    $row->cells[] = new html_table_cell($book->words);
+                    $row->cells[] = new html_table_cell($evaltext);
+                    $table->data[] = $row;
                 }
             }
         } else {
@@ -234,17 +242,10 @@
             }
         }
 
-        if (! empty($table)) {
-            $table->head  = array("Title", "Publisher", "Genre", "Level", "Words", "Evaluation");
-            $table->align = array("left", "left", "left", "center", "center", "center");
-            $table->width = "95%";
-
-            if (empty($getscript)) {
-                print_table($table);
-            }
-        }
         if (empty($getscript)) {
-            echo '</tr></table>';
+            if (! empty($table->data)) {
+                echo html_writer::table($table);
+            }
         }
 
         if (! isset($bookimages)) {
