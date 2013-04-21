@@ -141,7 +141,13 @@
 
                 if ($coverimages) {
                     if (is_file("{$CFG->dataroot}/reader/images/{$book->image}")) {
-                        $bookimages[$bookid] = $CFG->wwwroot.'/mod/reader/images.php/reader/images/'.$book->image;
+                        if ($CFG->slasharguments) {
+                            $bookimage = new moodle_url('/mod/reader/images.php/reader/images/'.$book->image);
+                        } else {
+                            $params = array('file' => '/reader/images/'.$book->image);
+                            $bookimage = new moodle_url('/mod/reader/images.php', $params);
+                        }
+                        $bookimages[$bookid] = $bookimage;
                         if (empty($getscript)) {
                             echo '<div>';
 
@@ -288,6 +294,12 @@
     $PAGE->set_title($title);
     $PAGE->set_heading($course->fullname);
 
+    if ($CFG->slasharguments) {
+        $images_php = 'images.php';
+    } else {
+        $images_php = 'images.php?file=';
+    }
+
     echo $OUTPUT->header();
 
     echo '<script type="text/javascript" src="'.$CFG->wwwroot.'/blocks/readerview/js/jquery-1.4.1.min.js"></script>  ';
@@ -301,7 +313,7 @@
     echo '        $("#searchresult").html('."'".'<img width="16" height="16" src="'.$CFG->wwwroot.'/blocks/readerview/img/zoomloader.gif" alt="" />'."'".');'."\n";
     echo '    }'."\n";
     echo '    function showScript () {'."\n";
-    echo '        $.post("'.$CFG->wwwroot.'/mod/reader/images.php/reader/script.txt", function(data) {'."\n";
+    echo '        $.post("'.$CFG->wwwroot.'/mod/reader/'.$images_php.'/reader/script.txt", function(data) {'."\n";
     echo '            eval(data);'."\n";
     echo '        });'."\n";
     echo '    }'."\n";
