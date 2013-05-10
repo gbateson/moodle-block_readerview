@@ -267,6 +267,8 @@
         }
 
         $fp = false;
+
+        make_upload_directory('reader');
         if (file_exists($script_txt)) {
             if (is_writable($script_txt)) {
                 $fp = @fopen($script_txt, 'w+');
