@@ -1,18 +1,18 @@
 <?php
     require_once('../../config.php');
-    require_once('lib.php');
+    require_once($CFG->dirroot.'/mod/reader/lib.php');
 
-    $id               = optional_param('id', 0, PARAM_INT);
-    $a                = optional_param('a', NULL, PARAM_CLEAN);
-    $genre            = optional_param('genre', NULL, PARAM_CLEAN);
-    $fiction          = optional_param('fiction', NULL, PARAM_CLEAN);
-    $publisher        = optional_param('publisher', NULL, PARAM_CLEAN);
-    $coverimages      = optional_param('coverimages', NULL, PARAM_CLEAN);
-    $publisherlevel   = optional_param('publisherlevel', NULL, PARAM_CLEAN);
-    $mylevel          = optional_param('mylevel', NULL, PARAM_CLEAN);
-    $order            = optional_param('order', NULL, PARAM_CLEAN);
-    $instanceid       = optional_param('instanceid', NULL, PARAM_INT);
-    $getscript        = optional_param('getscript', NULL, PARAM_CLEAN);
+    $id             = optional_param('id', 0, PARAM_INT);
+    $a              = optional_param('a', NULL, PARAM_CLEAN);
+    $genre          = optional_param('genre', NULL, PARAM_CLEAN);
+    $fiction        = optional_param('fiction', NULL, PARAM_CLEAN);
+    $publisher      = optional_param('publisher', NULL, PARAM_CLEAN);
+    $coverimages    = optional_param('coverimages', NULL, PARAM_CLEAN);
+    $publisherlevel = optional_param('publisherlevel', NULL, PARAM_CLEAN);
+    $mylevel        = optional_param('mylevel', NULL, PARAM_CLEAN);
+    $order          = optional_param('order', NULL, PARAM_CLEAN);
+    $instanceid     = optional_param('instanceid', NULL, PARAM_INT);
+    $getscript      = optional_param('getscript', NULL, PARAM_CLEAN);
 
     if (! $course = $DB->get_record('course', array('id' => $id))) {
         error('Course id is not valid');
@@ -39,7 +39,32 @@
 
     $book_instancesarr = array();
 
+    $genresarray = array(
+        'all' => "All Genres",
+        'ad' => "Adventure",
+        'bi' => "Biography",
+        'cl' => "Classics",
+        'ch' => "Children's literature",
+        'co' => "Comedy",
+        'cu' => "Culture",
+        'ge' => "Geography/Environment",
+        'ho' => "Horror",
+        'hi' => "Historical",
+        'hu' => "Human interest",
+        'li' => "Literature in Translation",
+        'mo' => "Movies",
+        'mu' => "Murder Mystery",
+        'ro' => "Romance",
+        'sc' => "Science fiction",
+        'sh' => "Short stories",
+        'te' => "Technology & Science",
+        'th' => "Thriller",
+        'ch' => "Children's literature",
+        'yo' => "Young life, adventure"
+    );
+
     if ($genre) { // form data was submitted
+
 
         if ($fiction=='fn') {
             $fictionsql = '';
