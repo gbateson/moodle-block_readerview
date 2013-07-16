@@ -26,6 +26,7 @@ $string['or'] = 'OR';
 $string['orderby'] = 'Order by';
 $string['pluginname'] = 'Reader View';
 $string['publisher'] = 'Publisher';
+$string['readerview:addinstance'] = 'Add a new ReaderView block';
 $string['readinglevel'] = 'Reading level';
 $string['reviewhere'] = 'Type your review here. Please do NOT summarize the book. Say why it was interesting!';
 $string['saveanddisplay'] = 'Save and display';
