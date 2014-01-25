@@ -18,8 +18,10 @@
         error('Course id is not valid');
     }
 
-    $reader = $DB->get_record('reader', array('course' => $course->id));
-    if (empty($reader)) {
+    // Note: there may be more than one reader in a course
+    if ($reader = $DB->get_records('reader', array('course' => $course->id))) {
+        $reader = reset($reader);
+    } else {
         // could display a message here: "No reader activity has been setup in this course"
         $reader = (object)array('id' => 0, 'bookinstances' => 0);
     }
