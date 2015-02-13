@@ -3,16 +3,15 @@
     require_once($CFG->dirroot.'/mod/reader/lib.php');
 
     $id             = optional_param('id', 0, PARAM_INT);
-    $a              = optional_param('a', NULL, PARAM_CLEAN);
-    $genre          = optional_param('genre', NULL, PARAM_CLEAN);
-    $fiction        = optional_param('fiction', NULL, PARAM_CLEAN);
-    $publisher      = optional_param('publisher', NULL, PARAM_CLEAN);
-    $coverimages    = optional_param('coverimages', NULL, PARAM_CLEAN);
-    $publisherlevel = optional_param('publisherlevel', NULL, PARAM_CLEAN);
-    $mylevel        = optional_param('mylevel', NULL, PARAM_CLEAN);
-    $order          = optional_param('order', NULL, PARAM_CLEAN);
-    $instanceid     = optional_param('instanceid', NULL, PARAM_INT);
-    $getscript      = optional_param('getscript', NULL, PARAM_CLEAN);
+    $genre          = optional_param('genre', null, PARAM_CLEAN);
+    $fiction        = optional_param('fiction', null, PARAM_CLEAN);
+    $publisher      = optional_param('publisher', null, PARAM_CLEAN);
+    $coverimages    = optional_param('coverimages', null, PARAM_CLEAN);
+    $publisherlevel = optional_param('publisherlevel', null, PARAM_CLEAN);
+    $mylevel        = optional_param('mylevel',        null, PARAM_CLEAN);
+    $order          = optional_param('order',          null, PARAM_CLEAN);
+    $getscript      = optional_param('getscript',      null, PARAM_CLEAN);
+    $instanceid     = optional_param('instanceid',     null, PARAM_INT);
 
     if (! $course = $DB->get_record('course', array('id' => $id))) {
         error('Course id is not valid');
@@ -22,7 +21,7 @@
     if ($reader = $DB->get_records('reader', array('course' => $course->id))) {
         $reader = reset($reader);
     } else {
-        // could display a message here: "No reader activity has been setup in this course"
+        // could display a message here: 'No reader activity has been setup in this course'
         $reader = (object)array('id' => 0, 'bookinstances' => 0);
     }
 
@@ -34,7 +33,13 @@
     }
 
     require_login($course->id);
-    add_to_log($course->id, 'reader', 'reader block view books', "selectbook.php?id=$id", "$id");
+
+    if (function_exists('get_log_manager')) {
+        $manager = get_log_manager();
+        $manager->legacy_add_to_log($course->id, 'reader', 'reader block view books', 'selectbook.php?id='.$id, $id);
+    } else if (function_exists('add_to_log')) {
+        add_to_log($course->id, 'reader', 'reader block view books', 'selectbook.php?id='.$id, $id);
+    }
 
     $script_txt = $CFG->dataroot.'/reader/script.txt';
     $old_script_txt = $CFG->dirroot.'/blocks/readerview/script.txt';
@@ -42,55 +47,54 @@
     $book_instancesarr = array();
 
     $genresarray = array(
-        'all' => "All Genres",
-        'ad' => "Adventure",
-        'bi' => "Biography",
-        'cl' => "Classics",
-        'ch' => "Children's literature",
-        'co' => "Comedy",
-        'cu' => "Culture",
-        'ge' => "Geography/Environment",
-        'ho' => "Horror",
-        'hi' => "Historical",
-        'hu' => "Human interest",
-        'li' => "Literature in Translation",
-        'mo' => "Movies",
-        'mu' => "Murder Mystery",
-        'ro' => "Romance",
-        'sc' => "Science fiction",
-        'sh' => "Short stories",
-        'te' => "Technology & Science",
-        'th' => "Thriller",
-        'ch' => "Children's literature",
-        'yo' => "Young life, adventure"
+        'all' => 'All Genres',
+        'ad'  => 'Adventure',
+        'bi'  => 'Biography',
+        'cl'  => 'Classics',
+        'ch'  => "Children's literature",
+        'co'  => 'Comedy',
+        'cu'  => 'Culture',
+        'ge'  => 'Geography/Environment',
+        'ho'  => 'Horror',
+        'hi'  => 'Historical',
+        'hu'  => 'Human interest',
+        'li'  => 'Literature in Translation',
+        'mo'  => 'Movies',
+        'mu'  => 'Murder Mystery',
+        'ro'  => 'Romance',
+        'sc'  => 'Science fiction',
+        'sh'  => 'Short stories',
+        'te'  => 'Technology & Science',
+        'th'  => 'Thriller',
+        'ch'  => "Children's literature",
+        'yo'  => 'Young life, adventure'
     );
 
     if ($genre) { // form data was submitted
 
-
         if ($fiction=='fn') {
             $fictionsql = '';
         } else {
-            $fictionsql = " AND rb.fiction='$fiction' ";
+            $fictionsql = " AND rb.fiction = '$fiction' ";
         }
 
         if ($publisher == 'all') {
             $publishersql = '';
         } else {
-            $publishersql = " AND rb.publisher='$publisher' ";
+            $publishersql = " AND rb.publisher = '$publisher' ";
         }
 
         $publisherlevelsql = '';
 
         if ($mylevel == 'my') {
             $books = $DB->get_record('reader_levels', array('userid' => $USER->id));
-            $userlevelssql = ($books->currentlevel - 1).",".$books->currentlevel.",".($books->currentlevel + 1);
+            $userlevelssql = ($books->currentlevel - 1).','.$books->currentlevel.','.($books->currentlevel + 1);
             $publisherlevelsql = " AND rb.difficulty IN({$userlevelssql}) ";
         } else if (is_numeric($mylevel)) {
             $publisherlevelsql = " AND rb.difficulty='{$mylevel}' ";
         }
 
-        if (! $allcourses = $DB->get_records_sql ("SELECT id FROM {course}")) {
+        if (! $allcourses = $DB->get_records_sql("SELECT id FROM {course}")) {
             $allcourses = array();
         }
 
@@ -103,7 +107,7 @@
             $genresql = "(rb.genre='{$genre}' OR rb.genre LIKE '{$genre},%' OR rb.genre LIKE '%,{$genre},%' OR rb.genre LIKE '%,{$genre}')";
         }
 
-        if ($order == "rb.name" || $order == "rb.difficulty") {
+        if ($order == 'rb.name' || $order == 'rb.difficulty') {
             $sort = 'ASC';
         } else {
             $sort = '';
@@ -149,12 +153,12 @@
                 $allcount++;
                 if ($allcount >= $alllimit) {
                     if ($coverimages==1 && empty($getscript)) {
-                        echo "</tr><tr>";
+                        echo '</tr><tr>';
                     }
                     $allcount = 0;
                 }
 
-                if ($coverimages == 1 && empty($getscript)) {
+                if ($coverimages==1 && empty($getscript)) {
                     echo '<td width="180px" valign="top">';
                 }
                 if (empty($getscript)) {
@@ -166,7 +170,7 @@
                     echo '</script>';
                 }
 
-                if ($coverimages) {
+                if ($coverimages==1) {
                     if (is_file("{$CFG->dataroot}/reader/images/{$book->image}")) {
                         if ($CFG->slasharguments) {
                             $bookimage = new moodle_url('/mod/reader/images.php/reader/images/'.$book->image);
@@ -196,20 +200,20 @@
                 }
 
                 if ($book->evalaverage == 0 || $book->evalcount <= 3) {
-                    $book->evalaverage = "--";
+                    $book->evalaverage = '--';
                 }
 
-                if ($coverimages == 1) {
+                if ($coverimages==1) {
                     if (empty($getscript)) {
-                        echo "<div><strong>".$book->name."</strong></div>";
-                        echo "<div style=\"float:left;margin-right:10px;\">RL: {$book->difficulty}</div>";
-                        if ($context->allowquiztaken == "yes" && $book->evalaverage != "--") {
-                            echo "<div> eval: {$book->evalaverage} ({$book->evalcount})</div>";
+                        echo '<div><strong>'.$book->name.'</strong></div>';
+                        echo '<div style="float:left; margin-right:10px;">RL: '.$book->difficulty.'</div>';
+                        if ($context->allowquiztaken == 'yes' && $book->evalaverage != '--') {
+                            echo '<div> eval: '.$book->evalaverage.' ('.$book->evalcount.')</div>';
                         }
                         echo '<div style="clear:both;"></div>';
                     }
 
-                    //if ($genre == "all") {
+                    //if ($genre == 'all') {
 
                     if (empty($getscript)) {
                         if (! strstr($book->genre, ',')) {
@@ -254,8 +258,8 @@
                     $generetext = array_filter($generetext); // remove blanks
                     $generetext = implode(', ', $generetext); // convert to string
 
-                    if ($context->allowquiztaken == 'yes' && $book->evalaverage != "--") {
-                        $evaltext = "{$book->evalaverage} ({$book->evalcount})";
+                    if ($context->allowquiztaken == 'yes' && $book->evalaverage != '--') {
+                        $evaltext = "$book->evalaverage ($book->evalcount)";
                     } else {
                         $evaltext = '';
                     }
@@ -272,7 +276,7 @@
             }
         } else {
             if (empty($getscript)) {
-                echo "<td>No books</td>";
+                echo '<td>No books</td>';
             }
         }
 
@@ -394,65 +398,105 @@
 
     echo $OUTPUT->box_start('generalbox');
 
-    echo "<h1>".get_string('viewbooks',"block_readerview")."</h1>";
+    echo '<h1>'.get_string('viewbooks', 'block_readerview').'</h1>';
 
     echo '<form action="selectbook.php?id='.$id.'&instanceid='.$instanceid.'" method="post" id="searchform">';
-    echo '<div>';
-    echo get_string('genre',"block_readerview").' ';
+    echo '<div>'; // start top row
+
+    // =============================
+    // genre
+    // =============================
+    //
+    echo get_string('genre', 'block_readerview').' ';
     echo '<select name="genre">';
     foreach ($genresarray as $bookid => $value) {
         echo '<option value="'.$bookid.'">'.$value.'</option>';
     }
     echo '</select> ';
 
-    echo get_string('publisher',"block_readerview").' ';
+    // =============================
+    // publishers
+    // =============================
+    //
+    echo get_string('publisher', 'block_readerview').' ';
     echo '<select name="publisher"><option value="all">All</option>';
-
-    if ($reader->bookinstances == 1) {
-        $select = 'rb.publisher';
-        $from   = '{reader_books} rb, {reader_book_instances} ri';
-        $where  = 'rb.id = ri.bookid AND rb.hidden = ? AND ri.readerid = ?';
-        $params = array(0, $reader->id);
-        $books = $DB->get_records_sql("SELECT $select FROM $from WHERE $where ORDER BY rb.publisher");
+    if ($reader->bookinstances==1) {
+        $select = 'ri.id, rb.publisher';
+        $from   = '{reader_books} rb JOIN {reader_book_instances} ri ON ri.bookid = rb.id';
+        $where  = 'ri.readerid = ? AND rb.hidden = ?';
+        $params = array($reader->id, 0);
+        $books = $DB->get_records_sql("SELECT $select FROM $from WHERE $where ORDER BY rb.publisher", $params);
     } else {
-        $books = $DB->get_records_sql('SELECT * FROM {reader_books} ORDER BY publisher');
+        $books = $DB->get_records_sql('SELECT * FROM {reader_books} WHERE hidden = ? ORDER BY publisher', array(0));
     }
-
-    foreach ($books as $book) {
-        $publisher[$book->publisher] = $book->publisher;
+    if ($books) {
+        foreach ($books as $book) {
+            echo '<option value="'.$book->publisher.'">'.$book->publisher.'</option>';
+        }
     }
+    echo '</select>';
 
-    foreach ($publisher as $value) {
+    // =============================
+    // fiction / non-fiction
+    // =============================
+    //
+    echo ' '.get_string('fiction', 'block_readerview').' ';
+    echo '<select name="fiction"><option value="fn">All</option>';
+    echo '<option value="f">Fiction</option>';
+    echo '<option value="n">Non-fiction</option>';
+    echo '</select>';
+
+    // =============================
+    // book covers / text
+    // =============================
+    //
+    echo ' '.get_string('showcoverimages', 'block_readerview').' ';
+    echo '<select name="coverimages">';
+    echo '<option value="1">Images</option>';
+    echo '<option value="0">Words</option>';
+    echo '</select>';
+
+    echo '</div>'; // finish top row
+
+    // =============================
+    // reading levels
+    // =============================
+    //
+    echo '<div style="padding-top: 20px; float: left;margin-right: 40px;margin-left: 40px;">';
+    echo ' '.get_string('readinglevel', 'block_readerview').' <select name="mylevel">';
+    echo '<option value="all">'.get_string('alllevels', 'block_readerview').'</option>';
+    echo '<option value="my">'.get_string('mylevel', 'block_readerview').'</option>';
+    foreach (range(0, 14) as $value) {
         echo '<option value="'.$value.'">'.$value.'</option>';
     }
     echo '</select>';
+    echo '</div>';
 
-    echo ' '.get_string('fiction',"block_readerview").' <select name="fiction"><option value="fn">All</option><option value="f">Fiction</option><option value="n">Non-fiction</option></select>';
-
-    echo ' '.get_string('showcoverimages',"block_readerview").' <select name="coverimages"><option value="1">Images</option><option value="0">Words</option></select>';
-
-    echo '</div><div style="padding-top: 20px; float: left;margin-right: 40px;margin-left: 40px;">';
-
-    $publisherlevelarray = array('0' => "0",'1' => "1",'2' => "2",'3' => "3",'4' => "4",'5' => "5",'6' => "6",'7' => "7",'8' => "8",'9' => "9",'10' => "10",'12' => "12",'13' => "13",'14' => "14");
-
-    echo ' '.get_string('readinglevel',"block_readerview").' <select name="mylevel">';
-
-    echo '<option value="all">'.get_string('alllevels',"block_readerview").'</option><option value="my">'.get_string('mylevel',"block_readerview").'</option>';
-
-    foreach ($publisherlevelarray as $bookid => $value) {
-        echo '<option value="'.$bookid.'">'.$value.'</option>';
-    }
-
+    // =============================
+    // order by
+    // =============================
+    //
+    echo '<div style="padding-top: 20px; margin-left: 40px; float:left;margin-right:40px;">';
+    echo get_string('orderby', 'block_readerview').' ';
+    echo '<select name="order">';
+    echo '<option value="rb.name">'.get_string('alphabetically', 'block_readerview').'</option>';
+    echo '<option value="rb.difficulty">'.get_string('bylevel', 'block_readerview').'</option>';
     echo '</select>';
+    echo '</div>';
 
-    echo '</div> <div style="padding-top: 20px; margin-left: 40px; float:left;margin-right:40px;">'.get_string('orderby',"block_readerview").' <select name="order"><option value="rb.name">'.get_string('alphabetically',"block_readerview").'</option><option value="rb.difficulty">'.get_string('bylevel',"block_readerview").'</option></select></div>';
+    // =============================
+    // search button
+    // =============================
+    //
+    echo '<div style="padding-top:10px;">';
+    echo '<input type="submit" name="sub" value="'.get_string('search', 'block_readerview').'" style="font-size: 14pt;">';
+    echo '</div>';
 
-    echo '<div style="padding-top:10px;"><input type="submit" name="sub" value="'.get_string('search',"block_readerview").'" style="font-size: 14pt;"></div>';
     echo '</form>';
 
-    echo '<div style="clear:both;"></div><div id="searchresult">';
-
-    echo '</div><div id="showscript"></div>';
+    echo '<div style="clear:both;"></div>';
+    echo '<div id="searchresult"></div>';
+    echo '<div id="showscript"></div>';
 
     echo $OUTPUT->box_end();
     echo $OUTPUT->footer();
