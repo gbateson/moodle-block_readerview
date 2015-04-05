@@ -410,7 +410,7 @@
     echo get_string('genre', 'block_readerview').' ';
     echo '<select name="genre">';
     foreach ($genresarray as $bookid => $value) {
-        echo '<option value="'.$bookid.'">'.$value.'</option>';
+        echo '<option value="'.$bookid.'">'.s($value).'</option>';
     }
     echo '</select> ';
 
@@ -419,19 +419,23 @@
     // =============================
     //
     echo get_string('publisher', 'block_readerview').' ';
-    echo '<select name="publisher"><option value="all">All</option>';
-    if ($reader->bookinstances==1) {
-        $select = 'ri.id, rb.publisher';
-        $from   = '{reader_books} rb JOIN {reader_book_instances} ri ON ri.bookid = rb.id';
-        $where  = 'ri.readerid = ? AND rb.hidden = ?';
-        $params = array($reader->id, 0);
-        $books = $DB->get_records_sql("SELECT $select FROM $from WHERE $where ORDER BY rb.publisher", $params);
+    echo '<select name="publisher">';
+    echo '<option value="all">'.get_string('all').'</option>';
+    $select = 'rb.publisher, COUNT(*) AS countbooks';
+    if (empty($reader->bookinstances)) {
+        $from   = '{reader_books} rb';
+        $where  = 'rb.hidden = ? AND rb.publisher <> ?';
+        $params = array(0, 'Extra Points');
     } else {
-        $books = $DB->get_records_sql('SELECT * FROM {reader_books} WHERE hidden = ? ORDER BY publisher', array(0));
+        $from   = '{reader_books} rb JOIN {reader_book_instances} ri ON ri.bookid = rb.id';
+        $where  = 'ri.readerid = ? AND rb.hidden = ? AND rb.publisher <> ?';
+        $params = array($reader->id, 0, 'Extra Points');
     }
-    if ($books) {
-        foreach ($books as $book) {
-            echo '<option value="'.$book->publisher.'">'.$book->publisher.'</option>';
+    $where .= ' GROUP BY rb.publisher';
+    $where .= ' ORDER BY rb.publisher';
+    if ($publishers = $DB->get_records_sql_menu("SELECT $select FROM $from WHERE $where", $params)) {
+        foreach ($publishers as $publisher => $countbooks) {
+            echo '<option value="'.s($publisher).'">'.s($publisher)." ($countbooks books)</option>";
         }
     }
     echo '</select>';
