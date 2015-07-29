@@ -97,7 +97,7 @@ function xmldb_block_readerview_upgrade($oldversion, $block) {
         upgrade_block_savepoint($result, "$newversion", 'readerview');
     }
 
-    $newversion = 2012011913;
+    $newversion = 2015073004;
     if ($result && $oldversion < $newversion) {
         update_capabilities('block/readerview');
         upgrade_block_savepoint($result, "$newversion", 'readerview');
