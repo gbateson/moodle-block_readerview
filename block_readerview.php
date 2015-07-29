@@ -1,6 +1,7 @@
 <?php
 
 class block_readerview extends block_base {
+
     function init() {
         $this->title = get_string('title', 'block_readerview');
         $this->version = 2010021005;
@@ -44,6 +45,10 @@ class block_readerview extends block_base {
 
     function instance_allow_config() {
       return true;
+    }
+
+    function applicable_formats() {
+        return array('course' => true);
     }
 
     function cron(){
