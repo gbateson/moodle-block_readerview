@@ -15,5 +15,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-$plugin->version = 2015073004;
-$plugin->cron    = 3600;
+$plugin->component = 'block_readerview';
+$plugin->cron      = 3600;
+$plugin->maturity  = MATURITY_BETA;
+$plugin->requires  = 2010112400; // Moodle 2.0
+$plugin->version   = 2015090905;
+$plugin->release   = '2015.09.09 (05)';
