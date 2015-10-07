@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -19,5 +18,5 @@ $plugin->component = 'block_readerview';
 $plugin->cron      = 3600;
 $plugin->maturity  = MATURITY_BETA;
 $plugin->requires  = 2010112400; // Moodle 2.0
-$plugin->version   = 2015090905;
-$plugin->release   = '2015.09.09 (05)';
+$plugin->version   = 2015100706;
+$plugin->release   = '2015-10-07 (06)';
