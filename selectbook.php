@@ -13,9 +13,7 @@
     $getscript      = optional_param('getscript',      null, PARAM_CLEAN);
     $instanceid     = optional_param('instanceid',     null, PARAM_INT);
 
-    if (! $course = $DB->get_record('course', array('id' => $id))) {
-        error('Course id is not valid');
-    }
+    $course = $DB->get_record('course', array('id' => $id), '*', MUST_EXIST);
 
     // Note: there may be more than one reader in a course
     if ($reader = $DB->get_records('reader', array('course' => $course->id))) {
