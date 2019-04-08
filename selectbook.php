@@ -116,7 +116,7 @@
                       're.evalcount, re.evaltotal, re.evalaverage';
             $from   = '{reader_books} rb '.
                       'LEFT JOIN {readerview_evaluations} re ON re.bookid = rb.id';
-            $where  = 'rb.private = 0 AND rb.hidden != 1 '.
+            $where  = 'rb.hidden != 1 '.
                       "AND {$genresql} {$fictionsql} {$publishersql} {$publisherlevelsql}";
             if (! $books = $DB->get_records_sql("SELECT $select FROM $from WHERE $where ORDER BY $order $sort")) {
                 $books = array();
@@ -128,7 +128,7 @@
                       'LEFT JOIN {reader_books} rb ON rbi.bookid=rb.id'.
                       'LEFT JOIN {readerview_evaluations} re ON rb.id = re.bookid';
             $where  = 'rbi.reader = :readerid '.
-                      'AND rb.private = 0 AND rb.hidden != 1 '.
+                      'AND rb.hidden != 1 '.
                       "AND {$genresql} {$fictionsql} {$publishersql} {$publisherlevelsql}";
             $params = array('readerid' => $reader->id);
             if (! $books = $DB->get_records_sql("SELECT $select FROM $from WHERE $where ORDER BY $order $sort")) {
