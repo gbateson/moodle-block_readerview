@@ -18,5 +18,5 @@ $plugin->component = 'block_readerview';
 $plugin->cron      = 3600;
 $plugin->maturity  = MATURITY_STABLE;
 $plugin->requires  = 2010112400; // Moodle 2.0
-$plugin->version   = 20191012;
-$plugin->release   = '2019-10-12 ()';
+$plugin->version   = 2019101210;
+$plugin->release   = '2019-10-12 (10)';
