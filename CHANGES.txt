@@ -2,64 +2,53 @@
 Change log for block_readerview
 ========================================
 
+2019-11-10 (11)
+ - standardize layout and spelling in CHANGES.txt
 
 2019-04-17 (09)
- -  set maturity to STABLE 
+ - set maturity to STABLE
 
 2019-04-08 (08)
- -  set maturity to STABLE 
-
-2019-04-08 (08)
- -  review reference to obsolete rb.private field in SQL 
+ - review reference to obsolete rb.private field in SQL
 
 2016-08-20 (07)
- -  remove use of deprecated 'error' function 
+ - remove use of deprecated 'error' function
 
 2015-10-07 (06)
- -  blocks/readerview standardize format of release string in version.php 
-
-2015-09-09 (05)
- -  blocks/readerview standardize format of release string in version.php 
- -  block/readerview add 'component' and 'maturity' settings to version.php 
- -  block/readerview add 'component' and 'maturity' settings to version.php 
- -  block/readerview restrict display of readerview block to course page only 
- -  block/readerview fix missing capability myaddinstance 
- -  block/readerview display each publisher name only once is list of publishers 
- -  block/readerview display each publisher name only once is list of publishers 
- -  block/readerview handle new logging API in Moodle 2.7 
- -  block/readerview handle new logging API in Moodle 2.7 
- -  block/readerview fix mdb->get_record() found more than one record in courses that have more than one reader activity 
- -  Moodle.2x block/readerview fix title in DB XML file 
- -  Moodle.2x blocks/readerview add missing 'addinstance' string and micro-update version number 
- -  Moodle.2x block/readerview increment version number to be instep with Reader module 
- -  Moodle.2x blocks/readerview remove debug statements which caused scoring of ordering questions to be lower than it should be 
- -  Moodle.2x blocks/readerview use md5 instead of fraction field as id in ordering questions 
- -  Moodle.2x blocks/readerview fix display of book covers on Moodle sites requiring slasharguments OFF 
- -  Moodle.2x blocks/readerview move script.txt to moodledata 
- -  blocks/readerview use html_writer::table instead of print_table() 
- -  Moodle.2x blocks/readerview fix syntax error in cron SQL statement 
- -  Moodle.2x blocks/readerview standardize indentation 
- -  Moodle.2x blocks/readerview fix cron error about bookratingcount 
- -  Moodle.2x mod/reader remove multiline echo statements 
- -  Moodle.2x blocks/readerview tidy up cron code and selectbooks script 
- -  Moodle.2x blocks/readerview add missing block/readerview:addinstance 
- -  Moodle.2x blocks/readerview add missing block/readerview:addinstance 
- -  Moodle2.x blocks/readerview fix small syntax error in cron.php (line 9) 
- -  Moodle.2x blocks/readerview rename evalauation table and fields 
- -  Moodle 2.x blocks/readerview standardize whitespace and logic in cron.php 
- -  Moodle 2.x blocks/readerview add script.txt to gitignore and svnignore 
- -  Moodle 2.x blocks/readerview remove final closing php tag 
- -  Moodle.2x blocks/readerview rename 'reader_publisher' and 'reader_individual_books' tables, and rename 'individualbooks' field in 'reader' table 
- -  fix cvs/git/svn ignore files 
- -  fix cvs/git/svn ignore files 
- -  add cvs/git/svn ignore files 
- -  Moodle.2x blocks/readeriew add required capabilities for Moodle 2.4 
- -  Moodle.1x blocks/readerview fix use of deprecated function table_exists()  
- -  Moodle.1x blocks/readerview be more careful renaming evaluation table 
- -  Moodle.2x blocks/reacerview shorten table readerview_current_eval(uation) in db/install.xml 
- -  Moodle 2.x blocks/readerview fix syntax error in db/upgrade.php 
- -  Moodle.2x blocks/readerview increment version number to initiate upgrade 
- -  Moodle.2x blocks/readerview shorten tablename readerview_current_eval(uation) for Moodle 2.3 
- -  add reader module for Moodle 2.x 
-
- 
+ - standardize format of release string in version.php
+ - add 'component' and 'maturity' settings to version.php
+ - restrict display of readerview block to course page only
+ - fix missing capability myaddinstance
+ - display each publisher name only once is list of publishers
+ - handle new logging API in Moodle 2.7
+ - fix mdb->get_record() found more than one record in courses that have more than one reader activity
+ - fix title in DB XML file
+ - add missing 'addinstance' string and micro-update version number
+ - increment version number to be instep with Reader module
+ - remove debug statements which caused scoring of ordering questions to be lower than it should be
+ - use md5 instead of fraction field as id in ordering questions
+ - fix display of book covers on Moodle sites requiring slasharguments OFF
+ - move script.txt to moodledata
+ - use html_writer::table instead of print_table()
+ - fix syntax error in cron SQL statement
+ - standardize indentation
+ - fix cron error about bookratingcount
+ - remove multiline echo statements
+ - tidy up cron code and selectbooks script
+ - add missing block/readerview:addinstance
+ - Moodle2.x blocks/readerview fix small syntax error in cron.php (line 9)
+ - rename evalauation table and fields
+ - standardize whitespace and logic in cron.php
+ - add script.txt to gitignore and svnignore
+ - remove final closing php tag
+ - rename 'reader_publisher' and 'reader_individual_books' tables, and rename 'individualbooks' field in 'reader' table
+ - fix cvs/git/svn ignore files
+ - add cvs/git/svn ignore files
+ - add required capabilities for Moodle 2.4
+ - Moodle.1x blocks/readerview fix use of deprecated function table_exists()
+ - Moodle.1x blocks/readerview be more careful renaming evaluation table
+ - shorten table readerview_current_eval(uation) in db/install.xml
+ - fix syntax error in db/upgrade.php
+ - increment version number to initiate upgrade
+ - shorten tablename readerview_current_eval(uation) for Moodle 2.3
+ - add reader module for Moodle 2.x
