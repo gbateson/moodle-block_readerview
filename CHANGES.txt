@@ -2,6 +2,9 @@
 Change log for block_readerview
 ========================================
 
+2024-03-07 (15)
+ - bump version number to copy files to GIT repository
+
 2024-03-07 (14)
  - add new scheduled task for Moodle >= 2.7
 
