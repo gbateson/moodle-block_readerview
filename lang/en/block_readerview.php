@@ -14,6 +14,7 @@ $string['bylevel'] = 'By level';
 $string['cancel'] = 'Cancel';
 $string['characterslimit'] = 'You text must have only 200 characters.';
 $string['evaluation'] = 'evaluation';
+$string['evaluationstask'] = 'Evaluations task';
 $string['fiction'] = 'Fiction';
 $string['genre'] = 'Genre';
 $string['interestingbook'] = 'A very interesting book';
