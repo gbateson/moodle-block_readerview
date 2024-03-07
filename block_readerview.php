@@ -3,9 +3,14 @@
 class block_readerview extends block_base {
 
     function init() {
+        global $CFG;
         $this->title = get_string('title', 'block_readerview');
-        $this->version = 2010021005;
-        $this->cron = 86400;
+
+        // Enable legacy cron only on Moodle <= 2.6
+        // because Moodle >= 2.7 uses scheduled tasks.
+        if (floatval($CFG->release) <= 2.6) {
+            $this->cron = 86400;
+        }
     }
 
     function get_content() {
@@ -51,10 +56,18 @@ class block_readerview extends block_base {
         return array('course' => true);
     }
 
+    // This function was only used in Moodle <= 2.6.
+    // In Moodle >= 2.7, it is replaced by scheduled tasks.
     function cron(){
-        global $DB;
+        global $CFG, $DB;
 
-        mtrace( 'Updating reader block evaluations ...');
+        if (floatval($CFG->release) >= 2.7) {
+            $DB->set_field('block', 'cron', 0, ['name' => 'readerview']);
+            mtrace( 'Legacy cron has been disabled for the ReaderView block');
+            return true;
+        }
+
+        mtrace( 'Updating reader block evaluations ... ', '');
 
         $select = 'rb.id, rb.quizid, '.
                   'SUM(ra.bookrating) AS bookratingsum, '.
